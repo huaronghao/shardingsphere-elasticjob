@@ -232,4 +232,10 @@ public final class JobNodeStorage {
     public long getRegistryCenterTime() {
         return regCenter.getRegistryCenterTime(jobNodePath.getFullPath("systemTime/current"));
     }
+
+    public void removeJobNodeIfExist(String node) {
+        if (isJobNodeExisted(node)) {
+            regCenter.remove(jobNodePath.getFullPath(node));
+        }
+    }
 }

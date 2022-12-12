@@ -22,6 +22,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.lite.internal.election.LeaderService;
 import org.apache.shardingsphere.elasticjob.lite.internal.instance.InstanceService;
+import org.apache.shardingsphere.elasticjob.lite.internal.server.ServerService;
 import org.apache.shardingsphere.elasticjob.reg.base.CoordinatorRegistryCenter;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -69,6 +70,7 @@ public final class JobShutdownHookPlugin implements SchedulerPlugin {
             leaderService.removeLeader();
         }
         new InstanceService(regCenter, jobName).removeInstance();
+        new ServerService(regCenter, jobName).removeCurrent();
     }
     
     private void registerShutdownHook() {

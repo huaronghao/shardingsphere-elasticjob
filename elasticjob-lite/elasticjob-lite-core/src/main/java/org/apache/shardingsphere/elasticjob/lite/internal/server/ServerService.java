@@ -102,4 +102,9 @@ public final class ServerService {
         }
         return ServerStatus.ENABLED.name().equals(serverStatus);
     }
+
+    public void removeCurrent() {
+        String serverIp = JobRegistry.getInstance().getJobInstance(jobName).getServerIp();
+        jobNodeStorage.removeJobNodeIfExist(serverNode.getServerNode(serverIp));
+    }
 }
