@@ -49,6 +49,7 @@ public final class JobShutdownHookPlugin implements SchedulerPlugin {
     }
 
     private void removeAllNotHaveInstanceServiceIp() {
+        log.info("JobShutdownHookPlugin removeAllNotHaveInstanceServiceIp. {}", jobName);
         CoordinatorRegistryCenter regCenter = JobRegistry.getInstance().getRegCenter(jobName);
         if (null == regCenter) {
             return;
