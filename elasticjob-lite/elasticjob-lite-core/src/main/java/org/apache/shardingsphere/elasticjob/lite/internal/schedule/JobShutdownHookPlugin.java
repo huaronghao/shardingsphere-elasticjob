@@ -44,9 +44,18 @@ public final class JobShutdownHookPlugin implements SchedulerPlugin {
     @Override
     public void initialize(final String name, final Scheduler scheduler, final ClassLoadHelper classLoadHelper) throws SchedulerException {
         jobName = scheduler.getSchedulerName();
+        removeAllNotHaveInstanceServiceIp();
         registerShutdownHook();
     }
-    
+
+    private void removeAllNotHaveInstanceServiceIp() {
+        CoordinatorRegistryCenter regCenter = JobRegistry.getInstance().getRegCenter(jobName);
+        if (null == regCenter) {
+            return;
+        }
+        new ServerService(regCenter, jobName).removeAllHaveNotInstance();
+    }
+
     /**
      * <p>
      * Called when the associated <code>Scheduler</code> is started, in order

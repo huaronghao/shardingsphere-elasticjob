@@ -18,11 +18,11 @@
 package org.apache.shardingsphere.elasticjob.lite.internal.server;
 
 import com.google.common.base.Strings;
+import org.apache.shardingsphere.elasticjob.infra.concurrent.BlockUtils;
 import org.apache.shardingsphere.elasticjob.lite.internal.instance.InstanceNode;
 import org.apache.shardingsphere.elasticjob.lite.internal.schedule.JobRegistry;
 import org.apache.shardingsphere.elasticjob.lite.internal.storage.JobNodeStorage;
 import org.apache.shardingsphere.elasticjob.reg.base.CoordinatorRegistryCenter;
-import org.apache.shardingsphere.elasticjob.infra.concurrent.BlockUtils;
 
 import java.util.List;
 
@@ -106,5 +106,14 @@ public final class ServerService {
     public void removeCurrent() {
         String serverIp = JobRegistry.getInstance().getJobInstance(jobName).getServerIp();
         jobNodeStorage.removeJobNodeIfExist(serverNode.getServerNode(serverIp));
+    }
+
+    public void removeAllHaveNotInstance() {
+        List<String> serviceList = jobNodeStorage.getJobNodeChildrenKeys(ServerNode.ROOT);
+        for (String s : serviceList) {
+            if (!hasOnlineInstances(s)) {
+                jobNodeStorage.removeJobNodeIfExist(serverNode.getServerNode(s));
+            }
+        }
     }
 }
