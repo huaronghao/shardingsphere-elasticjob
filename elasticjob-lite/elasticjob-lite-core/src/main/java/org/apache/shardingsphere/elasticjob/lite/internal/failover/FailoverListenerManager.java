@@ -17,6 +17,8 @@
 
 package org.apache.shardingsphere.elasticjob.lite.internal.failover;
 
+import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.elasticjob.infra.handler.sharding.JobInstance;
 import org.apache.shardingsphere.elasticjob.infra.pojo.JobConfigurationPOJO;
 import org.apache.shardingsphere.elasticjob.infra.yaml.YamlEngine;
@@ -33,16 +35,13 @@ import org.apache.shardingsphere.elasticjob.reg.listener.DataChangedEvent;
 import org.apache.shardingsphere.elasticjob.reg.listener.DataChangedEvent.Type;
 import org.apache.shardingsphere.elasticjob.reg.listener.DataChangedEventListener;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 /**
  * Failover listener manager.
  */
+@Slf4j
 public final class FailoverListenerManager extends AbstractListenerManager {
     
     private final String jobName;
@@ -154,7 +153,9 @@ public final class FailoverListenerManager extends AbstractListenerManager {
         }
         
         private boolean isCurrentInstanceOnline(final DataChangedEvent event) {
-            return Type.ADDED == event.getType() && event.getKey().endsWith(instanceNode.getLocalInstancePath());
+//            log.info("event:{}", new Gson().toJson(event));
+//            log.info("instanceNode:{}", new Gson().toJson(instanceNode));
+            return Type.ADDED == event.getType() && !Objects.isNull(instanceNode.getLocalInstancePath()) && event.getKey().endsWith(instanceNode.getLocalInstancePath());
         }
         
         private boolean isTheOnlyInstance(final Set<JobInstance> availableJobInstances) {

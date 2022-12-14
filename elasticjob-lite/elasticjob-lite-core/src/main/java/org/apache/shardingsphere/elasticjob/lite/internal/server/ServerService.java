@@ -50,7 +50,8 @@ public final class ServerService {
      */
     public void persistOnline(final boolean enabled) {
         if (!JobRegistry.getInstance().isShutdown(jobName)) {
-            jobNodeStorage.fillEphemeralJobNode(serverNode.getServerNode(JobRegistry.getInstance().getJobInstance(jobName).getServerIp()), enabled ? ServerStatus.ENABLED.name() : ServerStatus.DISABLED.name());
+            jobNodeStorage.fillEphemeralJobNode(serverNode.getServerNode(JobRegistry.getInstance().getJobInstance(jobName).getServerIp()),
+                    enabled ? ServerStatus.ENABLED.name() : ServerStatus.DISABLED.name());
         }
     }
     
@@ -103,11 +104,17 @@ public final class ServerService {
         return ServerStatus.ENABLED.name().equals(serverStatus);
     }
 
+    /**
+     * remove current.
+     */
     public void removeCurrent() {
         String serverIp = JobRegistry.getInstance().getJobInstance(jobName).getServerIp();
         jobNodeStorage.removeJobNodeIfExist(serverNode.getServerNode(serverIp));
     }
 
+    /**
+     * remove all not have instances
+     */
     public void removeAllHaveNotInstance() {
         List<String> serviceList = jobNodeStorage.getJobNodeChildrenKeys(ServerNode.ROOT);
         for (String s : serviceList) {

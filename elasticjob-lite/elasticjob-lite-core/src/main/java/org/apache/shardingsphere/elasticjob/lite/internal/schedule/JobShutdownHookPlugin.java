@@ -44,17 +44,7 @@ public final class JobShutdownHookPlugin implements SchedulerPlugin {
     @Override
     public void initialize(final String name, final Scheduler scheduler, final ClassLoadHelper classLoadHelper) throws SchedulerException {
         jobName = scheduler.getSchedulerName();
-        removeAllNotHaveInstanceServiceIp();
         registerShutdownHook();
-    }
-
-    private void removeAllNotHaveInstanceServiceIp() {
-        log.info("JobShutdownHookPlugin removeAllNotHaveInstanceServiceIp. {}", jobName);
-        CoordinatorRegistryCenter regCenter = JobRegistry.getInstance().getRegCenter(jobName);
-        if (null == regCenter) {
-            return;
-        }
-        new ServerService(regCenter, jobName).removeAllHaveNotInstance();
     }
 
     /**
@@ -80,7 +70,10 @@ public final class JobShutdownHookPlugin implements SchedulerPlugin {
             leaderService.removeLeader();
         }
         new InstanceService(regCenter, jobName).removeInstance();
-        new ServerService(regCenter, jobName).removeCurrent();
+        ServerService serverService = new ServerService(regCenter, jobName);
+        log.info("JobShutdownHookPlugin removeAllNotHaveInstanceServiceIp. {}", jobName);
+        serverService.removeAllHaveNotInstance();
+        serverService.removeCurrent();
     }
     
     private void registerShutdownHook() {

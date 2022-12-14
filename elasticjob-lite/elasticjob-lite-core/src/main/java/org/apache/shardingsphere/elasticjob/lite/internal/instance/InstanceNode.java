@@ -17,9 +17,12 @@
 
 package org.apache.shardingsphere.elasticjob.lite.internal.instance;
 
+import org.apache.shardingsphere.elasticjob.infra.handler.sharding.JobInstance;
 import org.apache.shardingsphere.elasticjob.infra.yaml.YamlEngine;
 import org.apache.shardingsphere.elasticjob.lite.internal.schedule.JobRegistry;
 import org.apache.shardingsphere.elasticjob.lite.internal.storage.JobNodePath;
+
+import java.util.Optional;
 
 /**
  * Instance node.
@@ -68,7 +71,7 @@ public final class InstanceNode {
      * @return local instance path
      */
     public String getLocalInstancePath() {
-        return getInstancePath(JobRegistry.getInstance().getJobInstance(jobName).getJobInstanceId());
+        return getInstancePath(Optional.ofNullable(JobRegistry.getInstance().getJobInstance(jobName)).map(JobInstance::getJobInstanceId).orElse(null));
     }
     
     /**
