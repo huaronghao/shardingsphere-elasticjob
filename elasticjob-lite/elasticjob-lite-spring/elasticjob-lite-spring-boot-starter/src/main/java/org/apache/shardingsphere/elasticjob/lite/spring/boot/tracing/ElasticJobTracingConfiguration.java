@@ -50,6 +50,7 @@ public class ElasticJobTracingConfiguration {
         HikariDataSource tracingDataSource = new HikariDataSource();
         tracingDataSource.setJdbcUrl(dataSource.getUrl());
         BeanUtils.copyProperties(dataSource, tracingDataSource);
+        tracingDataSource.setMinimumIdle(2);
         return tracingDataSource;
     }
 
